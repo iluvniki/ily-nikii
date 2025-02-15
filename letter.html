@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Letter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* General Styles */
+        body {
+            background-color: #f3becf;
+            font-family: 'Cursive', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ff6b81;
+            box-sizing: border-box;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Love Letter Styles */
+        .love-letter {
+            background: #ffe4e1;
+            border: 1px solid #ff6b81;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-sizing: border-box;
+            flex-grow: 0; /* Allows the love letter to push the bear down */
+        }
+        h1 {
+            font-size: 2em;
+            color: #ff6b81;
+            margin: 0 0 10px 0;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+
+        /* Bear Styles */
+        @keyframes hearts-animation {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+        .hearts {
+            position: relative;
+        }
+        .heart {
+            position: absolute;
+            width: 26px;
+        }
+        .heart:before,
+        .heart:after {
+            content: "";
+            width: 15px;
+            height: 25px;
+            display: block;
+            position: absolute;
+            background-color: #ca4aae;
+            border-radius: 50% 50% 0 0;
+            top: 0;
+        }
+        .heart:before {
+            transform: rotate(-45deg);
+            transform-origin: left bottom;
+            left: 0;
+        }
+        .heart:after {
+            transform: rotate(45deg);
+            transform-origin: right bottom;
+            right: 25px;
+        }
+        .heart-1 {
+            top: 30px;
+            left: 50px;
+            animation: hearts-animation 2s linear 0s infinite;
+        }
+        .heart-2 {
+            top: -40px;
+            right: 0;
+            animation: hearts-animation 2s linear 0.4s infinite;
+        }
+        .heart-3 {
+            top: -80px;
+            left: 100px;
+            animation: hearts-animation 2s linear 0.8s infinite;
+        }
+        .heart-4 {
+            top: 40px;
+            right: 30px;
+            animation: hearts-animation 2s linear 1.2s infinite;
+        }
+        .heart-5 {
+            top: -60px;
+            right: 70px;
+            animation: hearts-animation 2s linear 1.6s infinite;
+        }
+        .heart-6 {
+            top: -20px;
+            left: 10px;
+            animation: hearts-animation 2s linear 2s infinite;
+        }
+        .bear-container {
+            width: 305px;
+            margin: auto;
+            margin-bottom: 160px; /* Adds space below the bear */
+        }
+        .bear {
+            margin-top: 44px;
+            position: relative;
+        }
+        .bear-head {
+            width: 109px;
+            height: 100px;
+            margin: auto;
+            position: relative;
+        }
+        .bear-head-shadow {
+            width: 109px;
+            height: 100%;
+            background-color: #ac664d;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 2;
+        }
+        .bear-head-main {
+            width: 101px;
+            height: 97%;
+            background-color: #c47d5f;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 0px;
+            z-index: 3;
+        }
+        .nose-and-mouth {
+            width: 67px;
+            height: 45px;
+            background-color: #facc9b;
+            border-radius: 45%;
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 6;
+        }
+        .nose {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 14px solid transparent;
+            border-top: 13px solid #470800;
+            left: 0px;
+            right: 0;
+            margin: auto;
+            top: 6px;
+        }
+        .nose:after {
+            content: "";
+            display: block;
+            width: 1px;
+            height: 17px;
+            background-color: #470800;
+            position: absolute;
+            top: -1px;
+            left: -1px;
+        }
+        .mouth {
+            width: 45px;
+            height: 35px;
+            background-color: transparent;
+            border-bottom: 1px solid #470800;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 0px;
+        }
+        .eyes {
+            z-index: 4;
+            position: absolute;
+            top: 53px;
+            left: 0;
+            right: 0;
+            width: 50px;
+            margin: auto;
+        }
+        .eye {
+            width: 10px;
+            height: 10px;
+            background-color: #66190f;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+        }
+        .eye.left-eye {
+            left: 0;
+        }
+        .eye.right-eye {
+            right: 0;
+        }
+        .ears {
+            width: 120px;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: -6px;
+            height: 40px;
+        }
+        .ear {
+            background-color: #ba6d51;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .ear.left-ear {
+            left: 0;
+        }
+        .ear.right-ear {
+            right: 0;
+        }
+        .ear-inner {
+            background-color: #fed09f;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            top: 8px;
+            position: absolute;
+        }
+        .ear.left-ear .ear-inner {
+            left: 8px;
+        }
+        .ear.right-ear .ear-inner {
+            right: 8px;
+        }
+        .bear-body {
+            position: relative;
+            z-index: 1;
+            width: 140px;
+            margin: auto;
+        }
+        .bear-main {
+            width: 100%;
+            height: 140px;
+            background-color: #a2644d;
+            border-radius: 30px 50% 50% 50%;
+            transform: rotate(45deg);
+            position: absolute;
+            top: -5px;
+        }
+        .bear-shadow {
+            width: 90%;
+            height: 95%;
+            background-color: #b56f56;
+            border-radius: 30px 50% 50% 50%;
+            position: absolute;
+            top: 5px;
+            left: -5px;
+        }
+        .bear-inner {
+            height: 136px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+        .tie {
+            width: 83px;
+            position: absolute;
+            left: -3px;
+            right: 0;
+            top: -4px;
+            margin: auto;
+        }
+        .tie-center {
+            width: 17px;
+            height: 17px;
+            background-color: #e71bbb;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        .tie-side {
+            width: 30px;
+            height: 30px;
+            background-color: #e71bbb;
+            position: absolute;
+        }
+        .tie-side-left {
+            left: 0px;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(-67deg);
+        }
+        .tie-side-right {
+            right: 0px;
+            border-radius: 0 50% 50% 50%;
+            transform: rotate(-21deg);
+        }
+        .paws {
+            position: absolute;
+            width: 178px;
+            left: -21px;
+            bottom: 54px;
+        }
+        .paw {
+            width: 85px;
+            height: 45px;
+            background-color: #c67f61;
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
+        }
+        .paw-left {
+            left: 0;
+            transform: rotate(45deg);
+        }
+        .paw-right {
+            right: 0;
+            transform: rotate(-45deg);
+        }
+        .paw-inner {
+            width: 80%;
+            height: 80%;
+            background-color: #fecb9e;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 9px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .love-letter {
+                padding: 10px;
+                margin: 10px auto;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .bear-container {
+                width: 200px; /* Adjusts bear size on mobile */
+            }
+            .bear {
+                transform: scale(0.8); /* Scales down the bear */
+                transform-origin: top center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="love-letter">
+        <h1>Niki</h1>
+        <p>Happy Valentine's Day Niki, Mt jou zijn is letterlijk een dream come true, i love you more than words can explain, j hb zoveel vr m gedaan </p>
+        <p> ik bn fr the luckiest person omdat ik iemand zo mooi, zo pretty, zo caring, zo beautiful, zo perfect, als jou in me leven hb, i fr want it to be you. j maak m altijd blij, j cared altijd vr me en ik hou zoveel vn j, j zal misschien ni altijd zo vr me voelen ma ik wel, j zal ALTIJD een speciale plaats hbbn in m hart en ik ga altijd vn j blijvn houdn, i love you my pretty girl</p>
+    </div>
+
+    <div class="bear-container">
+        <div class="hearts">
+            <div class="heart heart-1"></div>
+            <div class="heart heart-2"></div>
+            <div class="heart heart-3"></div>
+            <div class="heart heart-4"></div>
+            <div class="heart heart-5"></div>
+            <div class="heart heart-6"></div>
+        </div>
+        <div class="bear">
+            <div class="bear-head">
+                <div class="ears">
+                    <div class="ear left-ear">
+                        <div class="ear-inner"></div>
+                    </div>
+                    <div class="ear right-ear">
+                        <div class="ear-inner"></div>
+                    </div>
+                </div>
+                <div class="eyes">
+                    <div class="eye left-eye"></div>
+                    <div class="eye right-eye"></div>
+                </div>
+                <div class="nose-and-mouth">
+                    <div class="nose"></div>
+                    <div class="mouth"></div>
+                </div>
+                <div class="bear-head-main"></div>
+                <div class="bear-head-shadow"></div>
+            </div>
+            <div class="bear-body">
+                <div class="bear-main">
+                    <div class="bear-shadow"></div>
+                </div>
+                <div class="bear-inner">
+                    <div class="tie">
+                        <div class="tie-center"></div>
+                        <div class="tie-side tie-side-left"></div>
+                        <div class="tie-side tie-side-right"></div>
+                    </div>
+                    <div class="paws">
+                        <div class="paw paw-left">
+                            <div class="paw-inner paw-left-inner"></div>
+                        </div>
+                        <div class="paw paw-right">
+                            <div class="paw-inner paw-right-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

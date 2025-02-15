@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>I love you</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        canvas {
+            background-color: #ffe4e1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            color: rgb(0, 0, 0);
+            font-family: 'Pacifico', cursive;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .clickable-image, .click-image, .image {
+            width: 150px;
+            max-width: 100%;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .click-text, .text, .man {
+            font-size: 27px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .clickable-image, .click-image, .image {
+                width: 100px;
+            }
+            .click-text, .text, .man {
+                font-size: 18px;
+            }
+        }
+    </style>
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <script>
+        function redirectToFlowers() {
+            window.location.href = "flowers.html";
+        }
+        function redirectToLetter() {
+            window.location.href = "letter.html";
+        }
+        function redirectToList() {
+            window.location.href = "list.html";
+        }
+
+        var canvas;
+        var stage;
+        var container;
+        var captureContainers;
+        var captureIndex;
+
+        function init() {
+            // create a new stage and point it at our canvas:
+            canvas = document.getElementById("testCanvas");
+            stage = new createjs.Stage(canvas);
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            var w = canvas.width;
+            var h = canvas.height;
+
+            container = new createjs.Container();
+            stage.addChild(container);
+
+            captureContainers = [];
+            captureIndex = 0;
+
+            // create a large number of slightly complex vector shapes, and give them random positions and velocities:
+            for (var i = 0; i < 100; i++) {
+                var heart = new createjs.Shape();
+                heart.graphics.beginFill(createjs.Graphics.getHSL(Math.random() * 30 - 45, 100, 50 + Math.random() * 30));
+                heart.graphics.moveTo(0, -12).curveTo(1, -20, 8, -20).curveTo(16, -20, 16, -10).curveTo(16, 0, 0, 12);
+                heart.graphics.curveTo(-16, 0, -16, -10).curveTo(-16, -20, -8, -20).curveTo(-1, -20, 0, -12);
+                heart.y = -100;
+
+                container.addChild(heart);
+            }
+
+            var text = new createjs.Text("the longer I'm with you\nthe more I love you.", "bold 29px Pacifico", "#000");
+            text.textAlign = "center";
+            text.x = w / 2;
+            text.y = 30; // Adjusted to position the text at the top
+            stage.addChild(text);
+
+            for (i = 0; i < 100; i++) {
+                var captureContainer = new createjs.Container();
+                captureContainer.cache(0, 0, w, h);
+                captureContainers.push(captureContainer);
+            }
+
+            // start the tick and point it at the window so we can do some work before updating the stage:
+            createjs.Ticker.timingMode = createjs.Ticker.RAF;
+            createjs.Ticker.on("tick", tick);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stage.update();
+        }
+
+        function tick(event) {
+            var w = canvas.width;
+            var h = canvas.height;
+            var l = container.numChildren;
+
+            captureIndex = (captureIndex + 1) % captureContainers.length;
+            stage.removeChildAt(0);
+            var captureContainer = captureContainers[captureIndex];
+            stage.addChildAt(captureContainer, 0);
+            captureContainer.addChild(container);
+
+            // iterate through all the children and move them according to their velocity:
+            for (var i = 0; i < l; i++) {
+                var heart = container.getChildAt(i);
+                if (heart.y < -50) {
+                    heart._x = Math.random() * w;
+                    heart.y = h * (1 + Math.random()) + 50;
+                    heart.perX = (1 + Math.random() * 2) * h;
+                    heart.offX = Math.random() * h;
+                    heart.ampX = heart.perX * 0.1 * (0.15 + Math.random());
+                    heart.velY = -Math.random() * 2 - 1;
+                    heart.scale = Math.random() * 2 + 1;
+                    heart._rotation = Math.random() * 40 - 20;
+                    heart.alpha = Math.random() * 0.75 + 0.05;
+                    heart.compositeOperation = Math.random() < 0.33 ? "lighter" : "source-over";
+                }
+                var int = (heart.offX + heart.y) / heart.perX * Math.PI * 2;
+                heart.y += heart.velY * heart.scaleX / 2;
+                heart.x = heart._x + Math.cos(int) * heart.ampX;
+                heart.rotation = heart._rotation + Math.sin(int) * 30;
+            }
+
+            captureContainer.updateCache("source-over");
+
+            // draw the updates to stage:
+            stage.update();
+        }
+    </script>
+</head>
+<body onload="init()">
+    <canvas id="testCanvas"></canvas>
+    <div class="container">
+        <img src="flower.png" alt="Click to go to Flowers Page" class="clickable-image" onclick="redirectToFlowers()">
+        <p class="click-text">Click</p>
+        <img src="letter.png" alt="Click to go to Letter Page" class="click-image" onclick="redirectToLetter()">
+        <p class="text">Click</p>
+        <img src="R.png" alt="Click to go to List Page" class="image" onclick="redirectToList()">
+        <p class="man">Click</p>
+    </div>
+</body>
+</html>

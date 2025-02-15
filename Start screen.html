@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day</title>
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: pink;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+        #myHeader {
+            font-size: 8vw;
+            font-family: "Pacifico", serif;
+            color: white;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            width: 90%;
+            max-width: 350px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            box-sizing: border-box;
+            margin: 20px 0;
+        }
+        .message {
+            margin-top: 10px;
+            font-size: 5vw;
+            color: white;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 5vw;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            cursor: pointer;
+            background-color: rgba(255, 73, 225, 0.7);
+            border: none;
+            color: rgb(206, 204, 204);
+        }
+        .hint {
+            display: none;
+            font-size: 5vw;
+            color: white;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="testCanvas"></canvas>
+    <h1 id="myHeader">Happy Valentine's Day Niki <3</h1>
+    <div class="container">
+        <input type="password" id="passwordInput" maxlength="6" placeholder="Enter 6-digit password" />
+        <button onclick="checkPassword()">Submit</button>
+        <div id="message" class="message"></div>
+        <div id="hint" class="hint">Hint: Dag dat we samen zijn</div>
+    </div>
+    <script>
+        var canvas, stage, container;
+        function init() {
+            canvas = document.getElementById("testCanvas");
+            stage = new createjs.Stage(canvas);
+            resizeCanvas();
+            window.addEventListener("resize", resizeCanvas);
+            container = new createjs.Container();
+            stage.addChild(container);
+            for (var i = 0; i < 100; i++) {
+                var heart = new createjs.Shape();
+                heart.graphics.beginFill(createjs.Graphics.getHSL(Math.random() * 30 - 45, 100, 50 + Math.random() * 30));
+                heart.graphics.moveTo(0, -12).curveTo(1, -20, 8, -20).curveTo(16, -20, 16, -10).curveTo(16, 0, 0, 12);
+                heart.graphics.curveTo(-16, 0, -16, -10).curveTo(-16, -20, -8, -20).curveTo(-1, -20, 0, -12);
+                heart.y = -100;
+                container.addChild(heart);
+            }
+            createjs.Ticker.timingMode = createjs.Ticker.RAF;
+            createjs.Ticker.on("tick", tick);
+        }
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        function tick(event) {
+            var w = canvas.width;
+            var h = canvas.height;
+            for (var i = 0; i < container.numChildren; i++) {
+                var heart = container.getChildAt(i);
+                if (heart.y < -50) {
+                    heart._x = Math.random() * w;
+                    heart.y = h * (1 + Math.random()) + 50;
+                    heart.velY = -Math.random() * 2 - 1;
+                    heart.scale = Math.random() * 2 + 1;
+                    heart.alpha = Math.random() * 0.75 + 0.05;
+                }
+                heart.y += heart.velY;
+                heart.x = heart._x + Math.cos(heart.y / h * Math.PI * 2) * 30;
+            }
+            stage.update(event);
+        }
+        init();
+        function checkPassword() {
+            const correctPassword = "171224";
+            const userInput = document.getElementById('passwordInput').value;
+            const messageElement = document.getElementById('message');
+            const hintElement = document.getElementById('hint');
+            if (userInput === correctPassword) {
+                window.location.href = 'iloveyou.html';
+            } else {
+                messageElement.innerHTML = 'Password is incorrect!';
+                hintElement.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
